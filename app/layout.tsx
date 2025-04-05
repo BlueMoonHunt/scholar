@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import "@/style/globals.css";
 import { Poppins } from "next/font/google";
-import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/provider/themeProvider";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -10,8 +13,8 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: "Scholar",
-  description: "Your Campus",
+  title: "Scholar - Your Campus Guide",
+  description: "E Campus for students",
 };
 
 export default function RootLayout({
@@ -20,12 +23,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${poppins.variable} font-poppins antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${poppins.variable} font-poppins antialiased`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex min-h-screen w-full flex-col">
+              {children}
+            </div>
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
